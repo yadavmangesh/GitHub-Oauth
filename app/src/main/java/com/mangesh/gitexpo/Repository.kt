@@ -1,47 +1,48 @@
 package com.mangesh.gitexpo
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.mangesh.gitexpo.Pojo.Contributor
-import com.mangesh.gitexpo.Pojo.Owner
-import com.mangesh.gitexpo.Pojo.Repo
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Repository {
+class Repository(val userDao: UserDao?) {
 
     private  var api:Api?
 
-    private var liveDataPublicRepoList:MutableLiveData<MutableList<Repo>> = MutableLiveData()
-
     private var liveContributorList:MutableLiveData<MutableList<Contributor>> = MutableLiveData()
 
-    private var liveRepoList:MutableLiveData<MutableList<Repo>> = MutableLiveData()
 
     init {
         api= RetroClient.getClient()
     }
 
-    fun getListofPublicRepos():MutableLiveData<MutableList<Repo>>{
+    fun getListofUser(id:Int,limit:Int){
 
-        api?.getPublicRepositories()?.enqueue(object :retrofit2.Callback<MutableList<Repo>>{
-            override fun onFailure(call: Call<MutableList<Repo>>, t: Throwable) {
-               Log.d("Repository ","getPublicRepositories onFailure")
+        api?.getUsers(id,limit)?.enqueue(object :retrofit2.Callback<MutableList<Contributor>>{
+            override fun onFailure(call: Call<MutableList<Contributor>>, t: Throwable) {
+               Log.d("Repository ","getUsers onFailure")
             }
 
-            override fun onResponse(call: Call<MutableList<Repo>>, response: Response<MutableList<Repo>>) {
-                liveDataPublicRepoList.value = response.body()
+            override fun onResponse(call: Call<MutableList<Contributor>>, response: Response<MutableList<Contributor>>) {
+
+
+                val list=response.body()
+                Log.d("","onResponse: ${list?.size}")
+                Thread(Runnable {
+                    userDao?.insertUser(list)
+                }).start()
+
             }
 
         })
-
-        return liveDataPublicRepoList
     }
 
     fun getContributorList(ownerName:String?,repoName:String?):MutableLiveData<MutableList<Contributor>>{
 
-        api?.getListofContributors(ownerName,repoName)?.enqueue(object :retrofit2.Callback<MutableList<Contributor>>{
+        api?.getListofContributors(ownerName,repoName)?.enqueue(object :Callback<MutableList<Contributor>>{
             override fun onFailure(call: Call<MutableList<Contributor>>, t: Throwable) {
 
                 Log.d("Repository ","getListofContributors onFailure")
@@ -49,7 +50,9 @@ class Repository {
 
             override fun onResponse(call: Call<MutableList<Contributor>>, response: Response<MutableList<Contributor>>) {
 
-               liveContributorList.value=response.body()
+                val list=response.body()
+                liveContributorList.value=list
+
                 Log.d("Repository ","getListofContributors onResponse")
             }
 
@@ -58,21 +61,11 @@ class Repository {
         return liveContributorList
     }
 
-    fun getRepoList(ownerName: String?):MutableLiveData<MutableList<Repo>>{
+    fun getUserList(): LiveData<List<Contributor>>? {
+       return userDao?.getUerList()
+    }
 
-        api?.getRepoList(ownerName)?.enqueue(object :retrofit2.Callback<MutableList<Repo>>{
-            override fun onFailure(call: Call<MutableList<Repo>>, t: Throwable) {
-                Log.d("Repository ","getRepoList onFailure")
-            }
-
-            override fun onResponse(call: Call<MutableList<Repo>>, response: Response<MutableList<Repo>>) {
-
-                 liveRepoList.value=response.body()
-
-            }
-
-        })
-
-        return liveRepoList
+    fun getFilterUser(p0: String?): LiveData<List<Contributor>>? {
+        return userDao?.searchUser(p0)
     }
 }

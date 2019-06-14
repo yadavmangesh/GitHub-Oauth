@@ -1,20 +1,18 @@
 package com.mangesh.gitexpo.Adapter
 
 import android.content.Context
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mangesh.gitexpo.Activities.OwnerActivity
+import com.mangesh.gitexpo.Pojo.Contributor
 import com.mangesh.gitexpo.R
-import com.mangesh.gitexpo.Pojo.Repo
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.repo_item.view.*
 
 class PublicRepoAdapter(val context: Context): RecyclerView.Adapter<PublicRepoAdapter.MyViewHolder>() {
 
-    var publicRepoList:MutableList<Repo> = arrayListOf()
+    var publicRepoList:List<Contributor> = arrayListOf()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): MyViewHolder {
 
@@ -26,23 +24,13 @@ class PublicRepoAdapter(val context: Context): RecyclerView.Adapter<PublicRepoAd
     }
 
     override fun onBindViewHolder(p0: MyViewHolder, p1: Int) {
-       val repo= publicRepoList[p1]
+       val user= publicRepoList[p1]
 
-        p0.itemView.tvOwnerName.text=repo.name
-        p0.itemView.tvRepoName.text= repo.fullName
-        Picasso.get().load(repo.owner?.avatarUrl).into(p0.itemView.ivOwnerImage)
-
-        p0.itemView.setOnClickListener {
-                 val intent=Intent(context,OwnerActivity::class.java).apply {
-                     putExtra("repo",repo)
-                     putExtra("url",repo.owner?.avatarUrl)
-
-                 }
-            context.startActivity(intent)
-        }
+        p0.itemView.tvOwnerName.text=user.login
+        Picasso.get().load(user?.avatarUrl).into(p0.itemView.ivOwnerImage)
     }
 
-    fun setData(list: MutableList<Repo>){
+    fun setData(list: List<Contributor>){
         publicRepoList=list
         notifyDataSetChanged()
     }

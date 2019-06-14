@@ -6,8 +6,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mangesh.gitexpo.Activities.ListRepoActivity
-import com.mangesh.gitexpo.Activities.OwnerActivity
 import com.mangesh.gitexpo.Pojo.Contributor
 import com.mangesh.gitexpo.R
 import com.squareup.picasso.Picasso
@@ -32,15 +30,6 @@ class ContributorAdapter(val context: Context) : RecyclerView.Adapter<Contributo
 
         p0.itemView.tvContributorName.text=contributor.login
         Picasso.get().load(contributor.avatarUrl).into(p0.itemView.ivContributor)
-
-        p0.itemView.setOnClickListener {
-            val intent=Intent(context,ListRepoActivity::class.java)
-            intent.apply {
-                putExtra("listRepo",contributor)
-            }
-
-            context.startActivity(intent)
-        }
     }
 
     fun setData(list: MutableList<Contributor>){

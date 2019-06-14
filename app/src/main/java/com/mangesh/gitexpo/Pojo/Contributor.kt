@@ -1,75 +1,75 @@
 package com.mangesh.gitexpo.Pojo
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-
+@Entity
 class Contributor() :Parcelable {
 
-        @SerializedName("login")
-        @Expose
-        var login: String? = null
-        @SerializedName("id")
-        @Expose
-        var id: Int? = null
-        @SerializedName("node_id")
-        @Expose
-        var nodeId: String? = null
-        @SerializedName("avatar_url")
-        @Expose
-        var avatarUrl: String? = null
-        @SerializedName("gravatar_id")
-        @Expose
-        var gravatarId: String? = null
-        @SerializedName("url")
-        @Expose
-        var url: String? = null
-        @SerializedName("html_url")
-        @Expose
-        var htmlUrl: String? = null
-        @SerializedName("followers_url")
-        @Expose
-        var followersUrl: String? = null
-        @SerializedName("following_url")
-        @Expose
-        var followingUrl: String? = null
-        @SerializedName("gists_url")
-        @Expose
-        var gistsUrl: String? = null
-        @SerializedName("starred_url")
-        @Expose
-        var starredUrl: String? = null
-        @SerializedName("subscriptions_url")
-        @Expose
-        var subscriptionsUrl: String? = null
-        @SerializedName("organizations_url")
-        @Expose
-        var organizationsUrl: String? = null
-        @SerializedName("repos_url")
-        @Expose
-        var reposUrl: String? = null
-        @SerializedName("events_url")
-        @Expose
-        var eventsUrl: String? = null
-        @SerializedName("received_events_url")
-        @Expose
-        var receivedEventsUrl: String? = null
-        @SerializedName("type")
-        @Expose
-        var type: String? = null
-        @SerializedName("site_admin")
-        @Expose
-        var siteAdmin: Boolean? = null
-        @SerializedName("contributions")
-        @Expose
-        var contributions: Int? = null
+                @SerializedName("login")
+                @Expose
+                var login: String? = null
+                @SerializedName("id")
+                @Expose
+                @PrimaryKey
+                var id: Int=0
+                @SerializedName("node_id")
+                @Expose
+                var nodeId: String? = null
+                @SerializedName("avatar_url")
+                @Expose
+                var avatarUrl: String? = null
+                @SerializedName("gravatar_id")
+                @Expose
+                var gravatarId: String? = null
+                @SerializedName("url")
+                @Expose
+                var url: String? = null
+                @SerializedName("html_url")
+                @Expose
+                var htmlUrl: String? = null
+                @SerializedName("followers_url")
+                @Expose
+                var followersUrl: String? = null
+                @SerializedName("following_url")
+                @Expose
+                var followingUrl: String? = null
+                @SerializedName("gists_url")
+                @Expose
+                var gistsUrl: String? = null
+                @SerializedName("starred_url")
+                @Expose
+                var starredUrl: String? = null
+                @SerializedName("subscriptions_url")
+                @Expose
+                var subscriptionsUrl: String? = null
+                @SerializedName("organizations_url")
+                @Expose
+                var organizationsUrl: String? = null
+                @SerializedName("repos_url")
+                @Expose
+                var reposUrl: String? = null
+                @SerializedName("events_url")
+                @Expose
+                var eventsUrl: String? = null
+                @SerializedName("received_events_url")
+                @Expose
+                var receivedEventsUrl: String? = null
+                @SerializedName("type")
+                @Expose
+                var type: String? = null
+                @SerializedName("site_admin")
+                @Expose
+                var siteAdmin: Boolean? = null
 
         constructor(parcel: Parcel) : this() {
                 login = parcel.readString()
-                id = parcel.readValue(Int::class.java.classLoader) as? Int
+                id = parcel.readInt()
                 nodeId = parcel.readString()
                 avatarUrl = parcel.readString()
                 gravatarId = parcel.readString()
@@ -86,12 +86,11 @@ class Contributor() :Parcelable {
                 receivedEventsUrl = parcel.readString()
                 type = parcel.readString()
                 siteAdmin = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
-                contributions = parcel.readValue(Int::class.java.classLoader) as? Int
         }
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
                 parcel.writeString(login)
-                parcel.writeValue(id)
+                parcel.writeInt(id)
                 parcel.writeString(nodeId)
                 parcel.writeString(avatarUrl)
                 parcel.writeString(gravatarId)
@@ -108,7 +107,6 @@ class Contributor() :Parcelable {
                 parcel.writeString(receivedEventsUrl)
                 parcel.writeString(type)
                 parcel.writeValue(siteAdmin)
-                parcel.writeValue(contributions)
         }
 
         override fun describeContents(): Int {
