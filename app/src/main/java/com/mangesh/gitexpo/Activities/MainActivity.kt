@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
             publicRepoAdapter.setData(it) }
         })
 
-
     }
 
    override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -71,13 +70,13 @@ class MainActivity : AppCompatActivity() {
 
             searchView?.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
                 override fun onQueryTextSubmit(p0: String?): Boolean {
-                    gitViewModel.search(p0)
-                    return true
+                    publicRepoAdapter.filter.filter(p0)
+                    return false
                 }
 
                 override fun onQueryTextChange(p0: String?): Boolean {
-                    gitViewModel.search(p0)
-                    return true
+                    publicRepoAdapter.filter.filter(p0)
+                    return false
                 }
 
             })

@@ -5,14 +5,21 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import com.mangesh.gitexpo.Pojo.Contributor
 import com.mangesh.gitexpo.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.repo_item.view.*
 
-class PublicRepoAdapter(val context: Context): RecyclerView.Adapter<PublicRepoAdapter.MyViewHolder>() {
+class PublicRepoAdapter(val context: Context): RecyclerView.Adapter<PublicRepoAdapter.MyViewHolder>(),Filterable {
+
+
+
 
     var publicRepoList:List<Contributor> = arrayListOf()
+
+    var searchList:List<Contributor> = arrayListOf()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): MyViewHolder {
 
@@ -23,6 +30,39 @@ class PublicRepoAdapter(val context: Context): RecyclerView.Adapter<PublicRepoAd
       return publicRepoList.size
     }
 
+    override fun getFilter(): Filter {
+        return object :Filter(){
+            override fun performFiltering(chars: CharSequence?): FilterResults {
+               val charString=chars.toString()
+
+                if (charString.isEmpty()){
+                    publicRepoList=searchList
+                }else{
+                    val filterlist:MutableList<Contributor> = mutableListOf()
+                    for (user in publicRepoList){
+                        if (user?.login?.toLowerCase()?.contains(charString?.toLowerCase())!!){
+                            filterlist.add(user)
+                        }
+                    }
+
+                    publicRepoList=filterlist
+                }
+
+                val result= FilterResults()
+                result.values=publicRepoList
+                return result
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                publicRepoList=results?.values as MutableList<Contributor>
+                    notifyDataSetChanged()
+            }
+
+
+        }
+    }
+
+
     override fun onBindViewHolder(p0: MyViewHolder, p1: Int) {
        val user= publicRepoList[p1]
 
@@ -31,6 +71,7 @@ class PublicRepoAdapter(val context: Context): RecyclerView.Adapter<PublicRepoAd
     }
 
     fun setData(list: List<Contributor>){
+        searchList=list
         publicRepoList=list
         notifyDataSetChanged()
     }
